@@ -1,18 +1,15 @@
-import React, { useState } from "react";
-import "../common/style.css";
+import React from "react";
 import Friend from "./Friend";
 import Pagination from "./Pagination";
+//Importing the dummy data list for the friends
 import dummyData from "../common/content/dummyData";
-import BlackImage from "../common/assets/black.jpeg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import "../common/style.css";
 
+/**
+ * @class {Friends}
+ * @extends {Component}
+ */
 class Friends extends React.Component {
-    // const [friendList, setFriendList] = useState([...dummyData.content]);
-    // const [inputValue, setInputValue] = useState("");
-    // const [filteredList, setFilteredList] = useState([...dummyData.content]);
-    // const [noResultMessage, setNoResultMessage] = useState(false);
-    // const [properWord, setProperWord] = useState(true);
 
     state = {
         friendList: [],
@@ -26,42 +23,6 @@ class Friends extends React.Component {
         deleteFriendId: null
     }
 
-    //     const handleKeyPress = (event) => {
-    //         if (event.key === "Enter") {
-    //             setFriendList();
-    //         }
-    //     }
-
-    //     const searchInputChange = (e) => {
-    //         const value = e.target.value;
-    //         setInputValue(value);
-    //         let updatedArray = [];
-    //         if (value && value.length > 0) {
-    //             const regrex = /^[a-zA-Z]*$/;
-    //             if (value.match(regrex)) {
-    //                 updatedArray = [...friendList].filter((elm) => {
-    //                     return elm.name.toLowerCase().match(value.toLowerCase())
-    //                 })
-    //                 setProperWord(true)
-    //             }
-    //             else {
-    //                 setProperWord(false)
-    //             }
-    //             if (updatedArray.length === 0) {
-    //                 setNoResultMessage(true);
-    //             }
-    //         }
-    //         else {
-    //             updatedArray = [];
-    //             setNoResultMessage(false);
-    //         }
-    //         setFilteredList(updatedArray);
-    //     }
-    //    const handleFavouriteClick = (id) => {
-    //     }
-    //     const deleteFriend = (id) => {
-
-    //     }
     componentDidMount() {
         const { friendList, filteredList } = this.state;
         if (friendList.length === 0 && filteredList.length === 0) {
@@ -73,13 +34,14 @@ class Friends extends React.Component {
         }
     }
 
-    componentDidUpdate() {
-    }
+    /**
+     * Function to capture event when user hits the enter key
+     * @param {Event} event 
+     */
     handleKeyPress = (event) => {
         const { friendList, properWord } = this.state;
         const value = event.target.value;
         if (event.key === "Enter") {
-            // setFriendList();
             if (value && value.length > 0 && properWord) {
                 const desc = "is your friend";
                 const content = {
@@ -99,6 +61,10 @@ class Friends extends React.Component {
         }
     }
 
+    /**
+     * Function to hande the search input box
+     * @param {Event} e 
+     */
     searchInputChange = (e) => {
         const { friendList } = this.state;
         const value = e.target.value;
@@ -144,6 +110,12 @@ class Friends extends React.Component {
             })
         }
     }
+
+    /**
+     * Function to handle the favourite click 
+     * @param {Number} id 
+     * @param {boolean} value 
+     */
     handleFavouriteClick = (id, value) => {
         const { filteredList, friendList } = this.state;
         const updatedArray = friendList.map(elm => elm.id === id ?
@@ -167,50 +139,59 @@ class Friends extends React.Component {
             friendList: updatedArray
         })
     }
-    deleteFriend = (id, value) => {
+
+    /**
+     * handle the delete button pressed
+     * @param {Number} id 
+     */
+    deleteFriend = (id) => {
         this.setState({
             deleteFriend: true,
             deleteFriendId: id
         })
     }
 
+    /**
+     * Handle pagination keys
+     * @param {Number} pageNumber 
+     */
     handlePaginationClick = (pageNumber) => {
         this.setState({
             currentPage: pageNumber
         })
     }
 
+    /**
+     * Function to handle the sorting functionality
+     */
     handleSort = () => {
         const { orderByDesc, friendList, filteredList } = this.state;
-
+        let arrayFriendList = [];
+        let arrayFilteredList = [];
         if (orderByDesc) {
-            const arrayFriendList = friendList.sort((x) => x.favourite ? -1 : 1);
-            const arrayFilteredList = filteredList.sort((x) => x.favourite ? -1 : 1);
-            this.setState({
-                friendList: arrayFriendList,
-                filteredList: arrayFilteredList,
-                orderByDesc: false
-            })
-            const favouriteTitle = document.querySelector(".favouriteTitle");
-            console.log(favouriteTitle)
-            favouriteTitle.style.background = "#d1ffea";
+            arrayFriendList = friendList.sort((x) => x.favourite ? -1 : 1);
+            arrayFilteredList = filteredList.sort((x) => x.favourite ? -1 : 1);
         }
         else {
-            const arrayFriendList = friendList.sort((x) => !x.favourite ? -1 : 1);
-            const arrayFilteredList = filteredList.sort((x) => !x.favourite ? -1 : 1);
-            this.setState({
-                friendList: arrayFriendList,
-                filteredList: arrayFilteredList,
-                orderByDesc: true
-            })
-            const favouriteTitle = document.querySelector(".favouriteTitle");
-            console.log(favouriteTitle)
-            favouriteTitle.style.background = "none"
+            arrayFriendList = friendList.sort((a, b) => a.id - b.id);
+            arrayFilteredList = filteredList.sort((a, b) => a.id - b.id);
         }
+        const favouriteTitle = document.querySelector(".favouriteTitle");
+        favouriteTitle.style.background = orderByDesc ? "#d1ffea" : "none";
+        this.setState({
+            friendList: arrayFriendList,
+            filteredList: arrayFilteredList,
+            orderByDesc: !orderByDesc,
+            currentPage: 1
+        })
     }
 
+    /**
+     * Function to render the html part in case if user clicks on delete button
+     * @returns {HTMLElement}
+     */
     displayDeleteAlert = () => {
-        const {filteredList, deleteFriendId} = this.state;
+        const { filteredList, deleteFriendId } = this.state;
         const overlay = document.querySelector(".overlay");
         if (overlay) {
             overlay.style.display = "block";
@@ -231,6 +212,10 @@ class Friends extends React.Component {
         )
     }
 
+    /**
+     * Handel the delete functionality of user
+     * @param {Boolean} toBeDeleted 
+     */
     handleDeleteFriend = (toBeDeleted) => {
         const { filteredList, friendList, deleteFriendId } = this.state;
 
@@ -244,7 +229,6 @@ class Friends extends React.Component {
                 deleteFriend: false,
                 deleteFriendId: null
             })
-
         }
         else {
             this.setState({
@@ -259,8 +243,7 @@ class Friends extends React.Component {
     }
 
     render() {
-        const { inputValue, filteredList, properWord, friendList, noResultMessage, currentPage, orderByDesc, deleteFriend } = this.state;
-        console.log(deleteFriend, "df")
+        const { inputValue, filteredList, properWord, noResultMessage, currentPage, deleteFriend } = this.state;
         return (
             <div className="mainContainer">
                 <div className="overlay"></div>
@@ -274,41 +257,20 @@ class Friends extends React.Component {
                             </div>
                             <span className="inputError"></span>
                         </div>
-                        {/* {
-                            filteredList.length > 0 &&
-                            <div className="titleWrapper">
-                                <span className="nameTitle">Name</span>
-                                <div className="sortBy" onClick={this.handleSort}>
-                                    <div>
-                                        <div>Sort By</div>
-                                        <div className="favouriteTitle">favourite</div>
-                                    </div>
-                                    <span className="arrowWrapper">
-                                        {
-                                            orderByDesc ?
-                                                <FontAwesomeIcon icon={faArrowUp}></FontAwesomeIcon>
-                                                :
-                                                <FontAwesomeIcon icon={faArrowDown}></FontAwesomeIcon>
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-                        } */}
                         {
                             filteredList.length > 0 &&
                             <div className="titleWrapper">
                                 <span className="nameTitle">Name</span>
                                 <div className="sortBy" onClick={this.handleSort}>
-                                        <div>Sort By: </div>
-                                        <div className="favouriteTitle">favourite</div>
+                                    <div>Sort By: </div>
+                                    <div className="favouriteTitle">favourite</div>
                                 </div>
                             </div>
                         }
                         {
-                            // renderFriendsList()
                             <React.Fragment>
                                 <Friend content={filteredList} currentPage={currentPage} favouriteClick={(id, val) => this.handleFavouriteClick(id, val)} offset={4}
-                                    noResultMessage={noResultMessage} properWord={properWord} deleteFriendClick={(id, val) => this.deleteFriend(id, val)}></Friend>
+                                    noResultMessage={noResultMessage} properWord={properWord} deleteFriendClick={(id) => this.deleteFriend(id)}></Friend>
                             </React.Fragment>
                         }
                     </div>

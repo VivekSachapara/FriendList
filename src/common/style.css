@@ -1,4 +1,8 @@
 
+body {
+    margin: 0;
+    font-family: lato;
+}
 .friendList {
     display: flex;
     align-items: center;
@@ -10,7 +14,8 @@
 }
 
 .friendListWrapper {
-    width: 200px;
+    width: 250px;
+    min-height: 385px;
     border: 1px solid #565656;
 }
 .title {
@@ -33,24 +38,22 @@
     font-size: 14px;
 }
 .searchInputWrapper {
-    width: 200px;
     border-bottom: 2px solid gray;
     padding: 10px 0;
 }
 .nameWrapper {
-    width: 50%;
+    width: 60%;
 }
 .iconWrapper {
     text-align: center;
     padding: 5px;
-    width: 50%;
     display: flex;
 }
 .favourite {
-    padding-left: 5px;
+    padding-left: 10px;
 }
 .delete {
-    padding-left: 5px;
+    padding-left: 10px;
 }
 .favouriteWrapper {
     padding: 10px;
@@ -79,7 +82,7 @@
     padding: 10px 5px;
 }
 .nameTitle {
-    width: 40%;
+    width: 50%;
 }
 .sortBy {
     display: flex;
@@ -104,7 +107,7 @@
     text-align: center;
     z-index: 101;
     top: 40%;
-    left: 39%;
+    left: 40%;
     padding: 20px
 }
 .deleteAlert div {
@@ -116,6 +119,7 @@
     background-color: white;
     outline: none;
     border: 1px solid gray;
+    padding: 5px 10px;
 }
 .buttonWrapper button:hover {
     background-color: gray;
@@ -133,6 +137,11 @@ z-index: 101;
 opacity: 0.3;
 display: none;
 }
-body {
-    margin: 0;
+
+.errorMessage {
+    padding: 10px;
+    color: red;
+}
+.noResultMessage {
+    padding: 10px;
 }

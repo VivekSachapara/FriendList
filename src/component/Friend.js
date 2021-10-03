@@ -1,23 +1,43 @@
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar, faTrashAlt as solidTrash } from "@fortawesome/free-solid-svg-icons";
 import { faStar as lightStar, faTrashAlt as lightTrash } from "@fortawesome/free-regular-svg-icons";
-import React from "react";
 
+/**
+ * Function to display list of friend
+ * @param {Object} props 
+ * @returns 
+ */
 const Friend = props => {
     const { content, noResultMessage, properWord, favouriteClick, deleteFriendClick, currentPage, offset } = props;
     const startIndex = (currentPage - 1) * offset;
-    const data = content.slice(startIndex, currentPage * offset); 
+    const data = content.slice(startIndex, currentPage * offset);
 
+    /**
+     * Function to handle favourite click
+     * @param {Number} id 
+     * @param {boolean} value 
+     */
     const handleFavouriteClick = (id, value) => {
         if (id) {
             favouriteClick(id, !value)
         }
     }
-    const deleteFriend = (id, value) => {
+
+    /**
+     * Function to delete friend
+     * @param {Number} id 
+     */
+    const deleteFriend = (id) => {
         if (id) {
-            deleteFriendClick(id, !value)
+            deleteFriendClick(id)
         }
     }
+
+    /**
+     * Function to render the list of friends
+     * @returns {HTMLElement}
+     */
     const showFriendList = () => {
         return (
             <>
@@ -39,7 +59,7 @@ const Friend = props => {
                                             </div>
                                         </div>
                                         <div className="delete">
-                                            <div className="deleteWrapper" onClick={() => deleteFriend(elm.id, elm.deleted)}>
+                                            <div className="deleteWrapper" onClick={() => deleteFriend(elm.id)}>
                                                 <FontAwesomeIcon
                                                     icon={elm.deleted ? solidTrash : lightTrash}
                                                 ></FontAwesomeIcon>
@@ -57,11 +77,11 @@ const Friend = props => {
     return (
         <>
             {
-                noResultMessage ? !properWord ? 
-                <div>Only alphabets are allowed</div> :
-                <div>No result found (Press Enter to add to friend list)</div>
-:
-                showFriendList()
+                noResultMessage ? !properWord ?
+                    <div className="errorMessage" dangerouslySetInnerHTML={{ __html: `<sup>*</sup>Only alphabets are allowed` }}></div> :
+                    <div className="noResultMessage">No result found (Press Enter to add to friend list)</div>
+                    :
+                    showFriendList()
             }
         </>
     )
