@@ -21,6 +21,7 @@ body {
     width: 250px;
     min-height: 385px;
     border: 1px solid #565656;
+    border-bottom: none;
 }
 .title {
     margin: 0;
