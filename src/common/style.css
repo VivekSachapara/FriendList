@@ -20,8 +20,8 @@ body {
 .friendListWrapper {
     width: 250px;
     min-height: 385px;
-    border: 1px solid #565656;
-    border-bottom: none;
+    border: 2px solid #565656;
+    border-bottom: 1px solid gray;
 }
 .title {
     margin: 0;
